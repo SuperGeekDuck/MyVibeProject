@@ -1,0 +1,494 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GNU PROJECT / FREE SOFTWARE CHRONICLE</title>
+<style>
+html,body{margin:0;height:100%;background:#0b0e0b;overflow:hidden}
+#screen{
+position:fixed;inset:0;margin:0;padding:16px 20px;
+font:14px/18px "DejaVu Sans Mono","Liberation Mono","Consolas","Courier New",monospace;
+color:#a8c8a8;background:#0b0e0b;
+white-space:pre;overflow:hidden;
+}
+/* 光标闪烁动画 */
+@keyframes blink {
+0%, 100% { opacity: 1; }
+50% { opacity: 0; }
+}
+.boot-cursor {
+animation: blink 0.8s step-end infinite;
+}
+</style>
+</head>
+<body>
+<pre id="screen"></pre>
+<script>
+(function(){
+'use strict';var pre = document.getElementById('screen');
+
+var state = { lang:'en', view:'menu', sel:0, open:0, scroll:0, pageStep:10 };
+
+/* ------------------------------------------------------------------ */
+/*  文案 /strings                                                     */
+/* ------------------------------------------------------------------ */
+var STR = {
+en: {
+title  : 'GNU PROJECT  /  FREE SOFTWARE CHRONICLE',
+menu   : ['WHAT IS GNU?',
+'THE FOUR FREEDOMS',
+'CHRONICLE  1983 - 1999',
+'CHRONICLE  2000 - TODAY',
+'GNU/LINUX AND LICENCES',
+'COLOPHON'],
+tagline: '"Free as in freedom."',
+hintMenu: 'UP/DOWN or J/K  move      ENTER  open      L  language',
+hintPage: 'UP/DOWN or J/K  scroll    ESC  back      L  language'
+},
+zh: {
+title  : 'GNU PROJECT  /  FREE SOFTWARE CHRONICLE',
+menu   : [' 什么是 GNU？',
+' 四大自由 ',
+' 编年史  1983 - 1999',
+' 编年史  2000 - 至今 ',
+'GNU/Linux 与许可证 ',
+' 关于本页 '],
+tagline: '「自由，指的是自由，而不是价格。」',
+hintMenu: '↑/↓ 或 J/K  移动     ENTER  打开     L  切换语言 ',
+hintPage: '↑/↓ 或 J/K  滚动     ESC  返回     L  切换语言 '
+}
+};
+
+/* ------------------------------------------------------------------ */
+/*  内容 /chapters                                                    */
+/* ------------------------------------------------------------------ */
+var CH = [
+
+{ en:{ title:'WHAT IS GNU?', body:
+`GNU is a recursive acronym: "GNU's Not Unix".
+
+It is a complete free operating system: kernel, compilers,
+editors, shells, libraries and utilities.  It is written so
+that every user is free to run, study, share and modify it.
+
+1983  Richard Stallman announces the GNU Project (Sep 27)
+1985  The Free Software Foundation is founded
+1989  The GNU General Public License, version 1
+1990  Work on the Hurd kernel begins
+1991  Linux appears and fills the missing kernel
+
+Today the GNU system lives on mostly as GNU/Linux, running
+on servers, phones, routers, spacecraft and supercomputers.`},   zh:{ title:'什么是 GNU？', body:`GNU 是一个递归缩写："GNU's Not Unix"（GNU 不是 Unix）。
+
+它是一套完整的自由操作系统：内核、编译器、编辑器、
+shell、函数库与实用工具。它的编写方式保证了每一位
+使用者都拥有运行、研究、分享与修改它的自由。
+
+1983  理查德・斯托曼公布 GNU 计划（9 月 27 日）
+1985  自由软件基金会（FSF）成立
+1989  GNU 通用公共许可证第一版
+1990  开始开发 Hurd 内核
+1991  Linux 出现，补上了缺失的内核
+
+今天，GNU 系统主要以 GNU/Linux 的形态存在，
+运行在服务器、手机、路由器、航天器与超级计算机上。`
+} },
+
+{ en:{ title:'THE FOUR FREEDOMS', body:
+`"Free software" means software that respects the freedom
+of its users and of their community.
+
+"Free" as in "free speech", not as in "free beer".
+
+FREEDOM 0   Run the program as you wish, for any purpose.
+FREEDOM 1   Study how it works, and change it as you wish.
+FREEDOM 2   Redistribute copies, so that you can help others.
+FREEDOM 3   Distribute copies of your modified versions.
+
+Access to the source code is a precondition for 1 and 3.
+
+A program is free software if it gives all its users these
+freedoms.  Otherwise it is nonfree, or "proprietary".`},   zh:{ title:'四大自由', body:`自由软件（Free Software）指尊重使用者自由
+及其社区的软件。
+
+"Free" 指的是自由，而不是价格免费。
+
+自由 0  按自己的意愿运行程序，用于任何目的。
+自由 1  研究程序的运作方式，并按需修改。
+自由 2  重新分发副本，从而帮助他人。
+自由 3  分发你修改后的版本。
+
+能够获取源代码，是自由 1 与自由 3 的前提。
+
+只有赋予所有使用者这些自由的程序，才是自由软件；
+否则它就是非自由的，或者叫 "专有软件"。`
+} },
+
+{ en:{ title:'CHRONICLE  1983 - 1999', body:
+`Selected events.  (Excerpt.)
+
+1983  GNU Project announced by Richard Stallman, 27 Sep.
+1984  Development of the GNU system begins.  GNU Emacs.
+1985  Free Software Foundation founded.  Emacs released.
+1986  The GNU Manifesto is published.
+1987  GCC 1.0 released -- the GNU C Compiler.
+1989  GNU GPL version 1.  GNU Bash.  GNU Make.
+1990  The Hurd kernel project starts.
+1991  Linux 0.01 by Linus Torvalds.  GPL version 2.
+1992  Linux is relicensed under the GPL.  GNU/Linux is born.
+1993  Debian and Red Hat are founded.
+1994  Linux kernel 1.0.
+1996  The KDE project starts.
+1997  The GNOME project starts.
+1998  Netscape releases its source.  "Open source" is coined.
+1999  GNOME 1.0.`},   zh:{ title:'编年史  1983 - 1999', body:`节选。
+
+1983  理查德・斯托曼公布 GNU 计划（9 月 27 日）
+1984  GNU 系统开始开发；GNU Emacs 起步
+1985  自由软件基金会成立；Emacs 发布
+1986  《GNU 宣言》发表
+1987  GCC 1.0 发布，即 GNU C 编译器
+1989  GPL 第一版；GNU Bash；GNU Make
+1990  Hurd 内核项目启动
+1991  Linus Torvalds 发布 Linux 0.01；GPL 第二版
+1992  Linux 改用 GPL 授权；GNU/Linux 诞生
+1993  Debian 与 Red Hat 成立
+1994  Linux 内核 1.0
+1996  KDE 项目启动
+1997  GNOME 项目启动
+1998  Netscape 公开源代码；"开源" 一词出现
+1999  GNOME 1.0`
+} },
+
+{ en:{ title:'CHRONICLE  2000 - TODAY', body:
+`Selected events.  (Excerpt.)
+
+2001  Linux 2.4.  Wikipedia goes online with a free licence.
+2003  The SCO lawsuits spark a debate on software freedom.
+2004  Ubuntu 4.10 released.  Mozilla Firefox 1.0.
+2006  The first draft of GPLv3 is published for comment.
+2007  GNU GPL version 3 is released.
+2011  LibreOffice forks from [OpenOffice.org](https://OpenOffice.org).
+2017  All of the TOP500 supercomputers run GNU/Linux.
+2023  The GNU Project turns 40 (1983 - 2023).
+
+The GPL is one of the most widely used software licences
+in the world today.`},   zh:{ title:'编年史  2000 - 至今', body:`节选。
+
+2001  Linux 2.4；维基百科以自由许可上线
+2003  SCO 诉讼案引发软件自由大讨论
+2004  Ubuntu 4.10 发布；Mozilla Firefox 1.0
+2006  GPLv3 首个草案公布，公开征求意见
+2007  GNU GPL 第三版正式发布
+2011  LibreOffice 从 [OpenOffice.org](https://OpenOffice.org) 分支
+2017  TOP500 超级计算机全部运行 GNU/Linux
+2023  GNU 项目成立 40 周年（1983 - 2023）
+
+如今，GPL 是世界上使用最广泛的软件许可证之一。`
+} },
+
+{ en:{ title:'GNU/LINUX AND LICENCES', body:
+`GNU/LINUX
+
+---
+
+"Linux" is the kernel begun by Linus Torvalds in 1991.
+The operating system around it is GNU: the shell, the
+compiler, the libraries, the tools.  The name "GNU/Linux"
+gives credit to both.
+
+LICENCES
+
+---
+
+GPLv2    1991  Strong copyleft.  Used by the Linux kernel.
+GPLv3    2007  Adds anti-tivoization and patent terms.
+LGPL     1991  Lesser GPL, for libraries.
+AGPL     2007  Copyleft for networked services.
+GFDL     2000  Licence for documentation.
+MIT/BSD    --  Permissive, without copyleft.
+
+COPYLEFT
+
+---
+
+You may change and redistribute the program, but the
+result must carry the same freedoms.  Freedom is passed
+on to everyone downstream.`},   zh:{ title:'GNU/Linux 与许可证', body:`GNU/LINUX
+
+---
+
+"Linux" 是 Linus Torvalds 于 1991 年开始的内核。
+围绕它的整个操作系统来自 GNU：shell、编译器、
+函数库与工具。所以它叫 "GNU/Linux"。
+
+许可证
+
+---
+
+GPLv2    1991  强著佐权，Linux 内核采用
+GPLv3    2007  增加反 Tivo 化与专利条款
+LGPL     1991  宽通用公共许可证，用于函数库
+AGPL     2007  面向网络服务的著佐权
+GFDL     2000  文档许可证
+MIT/BSD    --  宽松许可，不含著佐权
+
+著佐权（Copyleft）
+
+---
+
+你可以修改并再分发程序，但衍生作品必须保留
+同样的自由。自由由此传递给下游的每一个人。`
+} },
+
+{ en:{ title:'COLOPHON', body:
+`A small terminal-style reader about the GNU Project and
+the free software movement.
+
+- Pure ASCII layout.  Keyboard only.
+- UP/DOWN or J/K      move
+- ENTER or SPACE      open
+- ESC or BACKSPACE    go back
+- L                   switch language
+- PGUP/PGDN or U/D    scroll
+
+No tracking, no images, no fonts.  Just text.
+
+"Free software is a matter of liberty, not price."
+-- Richard Stallman
+
+Read more:  [https://www.gnu.org](https://www.gnu.org)`},   zh:{ title:'关于本页', body:`一个关于 GNU 计划与自由软件运动的小型终端式读物。
+
+- 纯 ASCII 排版，仅用键盘操作。
+- 上 / 下 或 J/K       移动
+- ENTER 或 空格      打开
+- ESC 或 BACKSPACE   返回
+- L                  切换语言
+- PGUP/PGDN 或 U/D   滚动
+
+没有追踪，没有图片，没有字体，只有文字。
+
+"自由软件关乎自由，而非价格。"
+—— 理查德・斯托曼
+
+延伸阅读：[https://www.gnu.org](https://www.gnu.org)`
+} }
+
+];
+
+/* ------------------------------------------------------------------ */
+/*  宽度工具 /width helpers                                           */
+/* ------------------------------------------------------------------ */
+var WIDE = /[\u1100-\u115F\u2E80-\uA4CF\uAC00-\uD7A3\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE6F\uFF00-\uFF60\uFFE0-\uFFE6]/;
+
+function cw(ch){ return WIDE.test(ch) ? 2 : 1; }
+
+function widthOf(s){
+var w = 0;
+for (var i = 0; i < s.length; i++) w += cw(s.charAt(i));
+return w;
+}
+
+function padTo(s, n){
+var w = widthOf(s);
+if (w <= n) return s + new Array(n - w + 1).join(' ');
+var out = '', acc = 0;
+for (var i = 0; i < s.length; i++){
+var c = cw(s.charAt(i));
+if (acc + c > n) break;
+out += s.charAt(i); acc += c;
+}
+return out;
+}
+
+function computeRows(){
+var cs = window.getComputedStyle(pre);
+var pad = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+var lh  = parseFloat(cs.lineHeight);
+if (!isFinite(lh) || lh <= 0) lh = 18;
+return Math.max(8, Math.floor((pre.clientHeight - pad) / lh));
+}
+
+/* ------------------------------------------------------------------ */
+/*  版面 /layout                                                      */
+/* ------------------------------------------------------------------ */
+var W  = 72;
+var HR = '+' + new Array(W - 1).join('-') + '+';
+
+function menuBody(L){
+var out = [];
+out.push('');
+out.push('   ____ _   _ _   *');
+out.push('  / __*| \ | | | | |');
+out.push(' | |  *|  \| | | | |');
+out.push(' | |*| | |\  | |*| |');
+out.push('  \****|*| \*|\***/');
+out.push('');
+out.push('  GNU OPERATING SYSTEM   .   1983 - ' + new Date().getFullYear());
+out.push('');
+for (var i = 0; i < L.menu.length; i++){
+var mark = (i === state.sel) ? ' > ' : '   ';
+out.push(mark + (i + 1) + '.  ' + L.menu[i]);
+}
+out.push('');
+out.push('  ' + L.tagline);
+return out;
+}
+
+function pageBody(pg){
+var lines = pg.body.trim().split('\n');
+var out = [];
+out.push('');
+out.push('  ' + pg.title);
+out.push('  ' + new Array(Math.max(8, widthOf(pg.title)) + 1).join('-'));
+out.push('');
+for (var i = 0; i < lines.length; i++){
+out.push(lines[i] ? '  ' + lines[i] : '');
+}
+return out;
+}
+
+/* ------------------------------------------------------------------ */
+/*  渲染 /render                                                      */
+/* ------------------------------------------------------------------ */
+function render(){
+var L = STR[state.lang];
+
+var head = [
+HR,
+'  ' + padTo(L.title, W - 6) + (state.lang === 'en' ? '[EN]' : '[ZH]'),
+HR,
+''
+];
+
+var body = (state.view === 'menu')
+? menuBody(L)
+: pageBody(CH[state.open][state.lang]);
+
+var rows  = computeRows();
+var avail = Math.max(4, rows - head.length - 4);
+
+var maxScroll = Math.max(0, body.length - avail);
+if (state.scroll < 0) state.scroll = 0;
+if (state.scroll > maxScroll) state.scroll = maxScroll;
+
+var shown = body.slice(state.scroll, state.scroll + avail);
+while (shown.length < avail) shown.push('');
+
+state.pageStep = Math.max(1, avail - 2);
+
+var tail = maxScroll > 0
+? '   [' + Math.round(100 * state.scroll / maxScroll) + '%]'
+: '';
+var hint = (state.view === 'menu' ? L.hintMenu : L.hintPage) + tail;
+
+var foot = ['', HR, '  ' + hint, HR];
+
+pre.textContent = head.concat(shown, foot).join('\n');
+}
+
+/* ------------------------------------------------------------------ */
+/*  开机自检动画 / Boot Sequence                                       */
+/* ------------------------------------------------------------------ */
+var bootLines = [
+'GNU/Linux BIOS v4.20.69',
+'Memory test: 640K OK',
+'Loading GNU Hurd... [FAILED]',
+'Loading Linux kernel... [OK]',
+'Mounting root filesystem... [OK]',
+'Starting GNU system...',
+''
+];
+
+var isBooting = true; // 启动锁，防止玩家乱按跳过动画
+var currentBootLine = 0;
+var bootSpeed = 800;  // 逐条显示的速度（毫秒 / 行），可以自己改
+
+function runBootSequence () {
+if (currentBootLine < bootLines.length) {
+// 移除旧的光标（如果有），追加新行，并在末尾加上闪烁光标
+var currentText = pre.textContent.replace (/█\n?/g, '');
+pre.textContent = currentText + bootLines [currentBootLine] + '\n█';
+currentBootLine++;
+
+// 递归调用，继续显示下一行
+setTimeout (runBootSequence, bootSpeed);
+
+} else {
+// 所有行显示完毕，停留 800ms 给玩家看清楚，然后进入主菜单
+setTimeout (function () {
+pre.textContent = pre.textContent.replace (/█\n?/g, '');
+isBooting = false;
+render ();
+}, 800);
+}
+}
+
+/* ------------------------------------------------------------------ */
+/*  键盘 /keyboard                                                    */
+/* ------------------------------------------------------------------ */
+function pageStep(){ return state.pageStep; }
+
+document.addEventListener ('keydown', function (e){
+// 如果还在开机自检，屏蔽所有按键
+if (isBooting) {
+e.preventDefault ();
+return;
+}
+
+var k = e.key;
+var handled = true;
+
+if (k === 'l' || k === 'L' || k === 'F2'){
+state.lang = (state.lang === 'en') ? 'zh' : 'en';
+state.scroll = 0;
+}
+else if (state.view === 'menu'){
+if (k === 'ArrowDown' || k === 'j' || k === 'J'){
+state.sel = (state.sel + 1) % CH.length;
+} else if (k === 'ArrowUp' || k === 'k' || k === 'K'){
+state.sel = (state.sel - 1 + CH.length) % CH.length;
+} else if (k === 'Enter' || k === ' ' || k === 'Spacebar'){
+state.view = 'page'; state.open = state.sel; state.scroll = 0;
+} else if (k === 'Home'){
+state.sel = 0;
+} else if (k === 'End'){
+state.sel = CH.length - 1;
+} else {
+handled = false;
+}
+}
+else {
+if (k === 'ArrowDown' || k === 'j' || k === 'J'){
+state.scroll += 1;
+} else if (k === 'ArrowUp' || k === 'k' || k === 'K'){
+state.scroll -= 1;
+} else if (k === 'PageDown' || k === ' ' || k === 'Spacebar' || k === 'd' || k === 'D'){
+state.scroll += pageStep();
+} else if (k === 'PageUp' || k === 'u' || k === 'U'){
+state.scroll -= pageStep();
+} else if (k === 'Home'){
+state.scroll = 0;
+} else if (k === 'End'){
+state.scroll = 1e9;
+} else if (k === 'Escape' || k === 'Backspace' || k === 'q' || k === 'h'){
+state.view = 'menu'; state.scroll = 0;
+} else {
+handled = false;
+}
+}
+
+if (handled){ e.preventDefault(); render(); }
+});
+
+window.addEventListener('resize', render);
+
+// 初始化页面并开始开机自检
+pre.textContent = '';
+runBootSequence ();
+
+})();
+</script>
+
+</body>
+</html>
